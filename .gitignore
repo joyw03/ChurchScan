@@ -1,0 +1,23 @@
+# Android/Java 관련
+*.iml
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Android Studio 관련 설정
+.idea/
+*.log
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# 로컬 환경 파일
+local.properties
+
+# 보안/비공개 키
+serviceAccountKey.json

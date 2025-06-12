@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:layout_marginBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 🔍 교회명 입력 -->
+            <EditText
+                android:id="@+id/etSearchText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="교회명을 입력하세요"
+                android:background="@drawable/edittext_bg"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 📎 텍스트 검색 버튼 -->
+            <Button
+                android:id="@+id/btnSearchText"
+                android:imeOptions="actionDone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이단 여부 텍스트 검색"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 📸 사진 업로드 검색 -->
+            <Button
+                android:id="@+id/btnImageSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진 업로드로 검색"
+                android:backgroundTint="@color/purple_700"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 📍 GPS 기반 검색 -->
+            <Button
+                android:id="@+id/btnGpsSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="내 위치로 교회 검색"
+                android:backgroundTint="@color/black"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp" />
+
+            <!-- 📍 지역/교단 필터 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="12dp">
+
+                <Spinner
+                    android:id="@+id/spinnerRegion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/spinnerDenomination"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- 지도 표시 -->
+            <FrameLayout
+                android:id="@+id/mapContainer"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#EEEEEE" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 하단 네비게이션 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu"
+        android:background="?android:attr/windowBackground" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

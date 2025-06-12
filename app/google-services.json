@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1070377520930",
+    "project_id": "churchscan-ee940",
+    "storage_bucket": "churchscan-ee940.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070377520930:android:37d784a4e9523321b85f7b",
+        "android_client_info": {
+          "package_name": "com.churchscan.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070377520930-3h56ebj2skff0ttqjjfd5cd9vrnak3hj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.churchscan.app",
+            "certificate_hash": "a541e49de7e1820c6d777a623ace162195f431b4"
+          }
+        },
+        {
+          "client_id": "1070377520930-itp9crsne7ltv2sq4fgqksa4q7n0hnb5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB48vFGI6jcKBfG4W8Udi67A0euViOZbeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070377520930-itp9crsne7ltv2sq4fgqksa4q7n0hnb5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

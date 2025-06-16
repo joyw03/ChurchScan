@@ -27,3 +27,5 @@ local.properties
 
 # 보안/비공개 키
 serviceAccountKey.json
+
+data_collection/firebase-key.json

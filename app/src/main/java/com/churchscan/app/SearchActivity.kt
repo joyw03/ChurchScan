@@ -141,6 +141,8 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
+                editText.setText("") // ✅ 결과 후 입력창 초기화
+
                 if (found) {
                     showAlert("⚠️ 이단 주의", "$keyword 관련 이단 정보가 존재합니다.")
                 } else {
@@ -148,6 +150,7 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
+                editText.setText("") // 실패 시에도 초기화
                 showAlert("❌ 오류", "Firestore 조회 중 오류 발생: ${it.message}")
             }
     }

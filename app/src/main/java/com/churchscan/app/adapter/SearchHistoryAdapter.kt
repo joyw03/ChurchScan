@@ -7,10 +7,12 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.churchscan.app.R
+import android.util.Log
 
 class SearchHistoryAdapter(
     private val historyList: MutableList<String>,
-    private val onDelete: (String) -> Unit
+    private val onDelete: (String) -> Unit,
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<SearchHistoryAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,8 +21,15 @@ class SearchHistoryAdapter(
 
         fun bind(item: String) {
             tvSearchItem.text = item
+
+            // ✅ 검색어 텍스트 클릭 시 호출
+            tvSearchItem.setOnClickListener {
+                onItemClick(item)
+            }
+
+            // ✅ X 버튼 클릭 시 삭제 호출
             btnDelete.setOnClickListener {
-                onDelete(item) // 외부에서 정의한 삭제 로직 호출
+                onDelete(item)
             }
         }
     }
@@ -37,13 +46,13 @@ class SearchHistoryAdapter(
         holder.bind(historyList[position])
     }
 
-    // ✅ 개별 삭제 시 호출
+    // ✅ 특정 항목 삭제
     fun removeItem(item: String) {
         historyList.remove(item)
         notifyDataSetChanged()
     }
 
-    // ✅ 전체 삭제 시 호출
+    // ✅ 전체 삭제
     fun clearAll() {
         historyList.clear()
         notifyDataSetChanged()

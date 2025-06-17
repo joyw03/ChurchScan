@@ -20,6 +20,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var prefsHelper: SharedPreferencesHelper
     private lateinit var adapter: SearchHistoryAdapter
+    private lateinit var editText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +33,25 @@ class SearchActivity : AppCompatActivity() {
         prefsHelper = SharedPreferencesHelper(this)
 
         // 🔍 뷰 연결
-        val editText = findViewById<EditText>(R.id.etSearchText)
+        editText = findViewById(R.id.etSearchText)
         val searchButton = findViewById<Button>(R.id.btnSearchText)
         val btnClearAll = findViewById<Button>(R.id.btnClearAll)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
 
-        // ✅ RecyclerView 설정
+        // ✅ RecyclerView 설정 (어댑터 연결 + 클릭 이벤트 추가)
         val historyList = prefsHelper.getRecentSearches().toMutableList()
-        adapter = SearchHistoryAdapter(historyList) { itemToDelete ->
-            prefsHelper.removeSearch(itemToDelete)
-            adapter.removeItem(itemToDelete)
-        }
+
+        adapter = SearchHistoryAdapter(
+            historyList,
+            onDelete = { itemToDelete ->
+                prefsHelper.removeSearch(itemToDelete)
+                adapter.removeItem(itemToDelete)
+            },
+            onItemClick = { selectedItem ->
+                editText.setText(selectedItem) // ✅ 텍스트 클릭 시 입력창에 자동 입력
+            }
+        )
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 

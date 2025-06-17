@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="12dp"
+    android:background="@android:color/white"
+    android:gravity="center_vertical">
+
+    <!-- 🔤 검색어 텍스트 -->
+    <TextView
+        android:id="@+id/tvSearchItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="최근 검색어"
+        android:textSize="16sp"
+        android:textColor="#000000" />
+
+    <!-- ❌ 삭제 버튼 (접근성 + 터치 크기 보완) -->
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:tint="@android:color/darker_gray"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="최근 검색어 삭제" />
+</LinearLayout>

@@ -8,6 +8,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.churchscan.app.adapter.SearchHistoryAdapter
 import com.churchscan.app.util.SharedPreferencesHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
@@ -16,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var prefsHelper: SharedPreferencesHelper
+    private lateinit var adapter: SearchHistoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,39 +28,57 @@ class SearchActivity : AppCompatActivity() {
         // ✅ Firebase 초기화
         FirebaseApp.initializeApp(this)
 
-        // ✅ Firestore 인스턴스
-        val db = FirebaseFirestore.getInstance()
-
-        // 🔍 검색 버튼 연결
-        val editText = findViewById<EditText>(R.id.etSearchText)
-        val searchButton = findViewById<Button>(R.id.btnSearchText)
-
-        // ✅ SharedPreferencesHelper 초기화
+        // ✅ SharedPreferences 도우미 초기화
         prefsHelper = SharedPreferencesHelper(this)
 
-        // ✅ MainActivity에서 전달된 검색어 자동 채우기
+        // 🔍 뷰 연결
+        val editText = findViewById<EditText>(R.id.etSearchText)
+        val searchButton = findViewById<Button>(R.id.btnSearchText)
+        val btnClearAll = findViewById<Button>(R.id.btnClearAll)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
+
+        // ✅ RecyclerView 설정
+        val historyList = prefsHelper.getRecentSearches().toMutableList()
+        adapter = SearchHistoryAdapter(historyList) { itemToDelete ->
+            prefsHelper.removeSearch(itemToDelete)
+            adapter.removeItem(itemToDelete)
+        }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        // ✅ MainActivity에서 전달된 검색어 처리
         val passedQuery = intent.getStringExtra("search_query")
         if (!passedQuery.isNullOrEmpty()) {
             editText.setText(passedQuery)
+            prefsHelper.saveRecentSearch(passedQuery)
+            if (historyList.contains(passedQuery)) {
+                adapter.removeItem(passedQuery)
+            }
+            adapter.notifyDataSetChanged()
             searchHeresyByChurchName(passedQuery)
         }
 
+        // 🔍 검색 버튼 클릭
         searchButton.setOnClickListener {
             val keyword = editText.text.toString().trim()
             if (keyword.isNotEmpty()) {
                 prefsHelper.saveRecentSearch(keyword)
+                adapter.removeItem(keyword)
+                adapter.notifyDataSetChanged()
                 searchHeresyByChurchName(keyword)
             } else {
                 showAlert("입력 오류", "교회 이름을 입력해주세요.")
             }
         }
 
-        // ✅ 엔터키(IME Action)로도 검색 가능하게 처리
+        // 🔍 키보드 엔터로 검색
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val keyword = editText.text.toString().trim()
                 if (keyword.isNotEmpty()) {
                     prefsHelper.saveRecentSearch(keyword)
+                    adapter.removeItem(keyword)
+                    adapter.notifyDataSetChanged()
                     searchHeresyByChurchName(keyword)
                 } else {
                     showAlert("입력 오류", "교회 이름을 입력해주세요.")
@@ -67,7 +89,13 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        // 🔻 하단 네비게이션 바 설정
+        // ❌ 전체 삭제 버튼 클릭
+        btnClearAll.setOnClickListener {
+            prefsHelper.clearAllSearches()
+            adapter.clearAll()
+        }
+
+        // 🔻 하단 네비게이션 바
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
         bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -91,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
     // 🔍 Firestore에서 이단 여부 확인
     private fun searchHeresyByChurchName(keyword: String) {
         val db = FirebaseFirestore.getInstance()
-        db.collection("jesus114_decisions")  // ✅ 컬렉션명 확인
+        db.collection("jesus114_decisions")
             .get()
             .addOnSuccessListener { documents ->
                 var found = false
@@ -115,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
             }
     }
 
-    // 📢 결과 표시용 AlertDialog
+    // 📢 AlertDialog 표시
     private fun showAlert(title: String, message: String) {
         AlertDialog.Builder(this)
             .setTitle(title)

@@ -38,6 +38,23 @@
                 android:backgroundTint="@color/purple_500"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="12dp" />
+
+            <!-- ❌ 최근 검색 전체 삭제 버튼 -->
+            <Button
+                android:id="@+id/btnClearAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="최근 검색어 전체 삭제"
+                android:backgroundTint="@color/red"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 📋 최근 검색 기록 RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSearchHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 

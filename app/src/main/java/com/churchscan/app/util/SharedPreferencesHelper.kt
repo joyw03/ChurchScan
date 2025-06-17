@@ -5,19 +5,34 @@ import android.content.SharedPreferences
 
 class SharedPreferencesHelper(context: Context) {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences("church_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("search_history", Context.MODE_PRIVATE)
 
-    fun saveRecentSearch(query: String) {
-        val current = getRecentSearches().toMutableList()
-        current.remove(query)
-        current.add(0, query)
-        while (current.size > 5) current.removeLast()
-
-        prefs.edit().putString("recent_searches", current.joinToString("|")).apply()
+    companion object {
+        private const val KEY_RECENT = "recent_searches"
     }
 
-    fun getRecentSearches(): List<String> {
-        val saved = prefs.getString("recent_searches", "") ?: ""
-        return if (saved.isNotBlank()) saved.split("|") else emptyList()
+    // ✅ 최근 검색어 저장 (중복 제거)
+    fun saveRecentSearch(query: String) {
+        val recentSet = getRecentSearches().toMutableSet()
+        recentSet.add(query)
+        prefs.edit().putStringSet(KEY_RECENT, recentSet).apply()
+    }
+
+    // ✅ 전체 목록 불러오기
+    fun getRecentSearches(): Set<String> {
+        return prefs.getStringSet(KEY_RECENT, emptySet()) ?: emptySet()
+    }
+
+    // ✅ 개별 검색어 삭제
+    fun removeSearch(query: String) {
+        val recentSet = getRecentSearches().toMutableSet()
+        recentSet.remove(query)
+        prefs.edit().putStringSet(KEY_RECENT, recentSet).apply()
+    }
+
+    // ✅ 전체 검색어 삭제
+    fun clearAllSearches() {
+        prefs.edit().remove(KEY_RECENT).apply()
     }
 }

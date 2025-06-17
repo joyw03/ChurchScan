@@ -8,11 +8,15 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.churchscan.app.util.SharedPreferencesHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SearchActivity : AppCompatActivity() {
+
+    private lateinit var prefsHelper: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -27,9 +31,20 @@ class SearchActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.etSearchText)
         val searchButton = findViewById<Button>(R.id.btnSearchText)
 
+        // ✅ SharedPreferencesHelper 초기화
+        prefsHelper = SharedPreferencesHelper(this)
+
+        // ✅ MainActivity에서 전달된 검색어 자동 채우기
+        val passedQuery = intent.getStringExtra("search_query")
+        if (!passedQuery.isNullOrEmpty()) {
+            editText.setText(passedQuery)
+            searchHeresyByChurchName(passedQuery)
+        }
+
         searchButton.setOnClickListener {
             val keyword = editText.text.toString().trim()
             if (keyword.isNotEmpty()) {
+                prefsHelper.saveRecentSearch(keyword)
                 searchHeresyByChurchName(keyword)
             } else {
                 showAlert("입력 오류", "교회 이름을 입력해주세요.")
@@ -41,6 +56,7 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val keyword = editText.text.toString().trim()
                 if (keyword.isNotEmpty()) {
+                    prefsHelper.saveRecentSearch(keyword)
                     searchHeresyByChurchName(keyword)
                 } else {
                     showAlert("입력 오류", "교회 이름을 입력해주세요.")

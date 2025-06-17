@@ -1,11 +1,6 @@
 <resources>
-<<<<<<< HEAD
     <string name="app_name">ChurchScan</string>
 
     <!-- 🔐 Firebase에서 발급받은 Web Client ID -->
     <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
 </resources>
-=======
-    <string name="app_name">My Application</string>
-</resources>
->>>>>>> origin/main

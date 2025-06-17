@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.churchscan.app.util.SharedPreferencesHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -14,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etMainSearch: EditText
     private lateinit var btnMainSearch: Button
     private lateinit var btnUploadImage: Button
+    private lateinit var recentSearchLayout: LinearLayout
+    private lateinit var prefsHelper: SharedPreferencesHelper
 
     override fun onStart() {
         super.onStart()
@@ -31,14 +36,16 @@ class MainActivity : AppCompatActivity() {
         etMainSearch = findViewById(R.id.etMainSearch)
         btnMainSearch = findViewById(R.id.btnMainSearch)
         btnUploadImage = findViewById(R.id.btnUploadImage)
+        recentSearchLayout = findViewById(R.id.recentSearchList)
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
+
+        prefsHelper = SharedPreferencesHelper(this)
 
         btnMainSearch.setOnClickListener {
             val query = etMainSearch.text.toString().trim()
             if (query.isNotEmpty()) {
-                val intent = Intent(this, SearchActivity::class.java)
-                intent.putExtra("search_query", query)
-                startActivity(intent)
+                prefsHelper.saveRecentSearch(query)
+                navigateToSearch(query)
             } else {
                 Toast.makeText(this, "검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
             }
@@ -66,5 +73,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         bottomNavView.selectedItemId = R.id.menu_home
+        updateRecentSearches()
+    }
+
+    private fun updateRecentSearches() {
+        recentSearchLayout.removeAllViews()
+        val recentSearches = prefsHelper.getRecentSearches()
+        for (search in recentSearches) {
+            val textView = TextView(this).apply {
+                text = "- $search"
+                textSize = 16f
+                setPadding(8, 8, 8, 8)
+                setOnClickListener {
+                    navigateToSearch(search)
+                }
+            }
+            recentSearchLayout.addView(textView)
+        }
+    }
+
+    private fun navigateToSearch(query: String) {
+        val intent = Intent(this, SearchActivity::class.java)
+        intent.putExtra("search_query", query)
+        startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateRecentSearches()
     }
 }

@@ -1,12 +1,15 @@
-# Android/Java 관련
+# =============== Android/Java 관련 ===============
 *.iml
 .gradle/
 build/
 captures/
 .externalNativeBuild/
 .cxx/
+*.apk
+*.ap_
+*.aab
 
-# Android Studio 관련 설정
+# =============== Android Studio 관련 설정 ===============
 .idea/
 .idea/caches
 .idea/libraries
@@ -16,16 +19,37 @@ captures/
 .idea/assetWizardSettings.xml
 *.log
 
+# =============== OS-specific ===============
 # macOS
 .DS_Store
 
 # Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# 로컬 환경 파일
+# =============== 로컬 환경 파일 ===============
 local.properties
 
-# 보안/비공개 키
+# =============== 보안/비공개 키 파일 ===============
 serviceAccountKey.json
-
 data_collection/firebase-key.json
+google-services.json
+firebase.json
+signing.properties
+*.jks
+
+# =============== 개발 도구 확장 (선택) ===============
+.vscode/
+.env
+*.swp
+*.swo
+*.tmp
+*~
+
+# =============== Jetpack Compose Preview ===============
+.idea/preview.xml
+
+# =============== Node (웹 연동시) ===============
+node_modules/
+npm-debug.log*

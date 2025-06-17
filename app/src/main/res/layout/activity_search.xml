@@ -26,15 +26,16 @@
                 android:background="@drawable/edittext_bg"
                 android:padding="12dp"
                 android:textSize="16sp"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
 
             <!-- 📎 텍스트 검색 버튼 -->
             <Button
                 android:id="@+id/btnSearchText"
-                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="이단 여부 텍스트 검색"
+                android:text="이단 유무 텍스트 검색"
                 android:backgroundTint="@color/purple_500"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="12dp" />
@@ -58,7 +59,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 하단 네비게이션 -->
+    <!-- 하단 네비게이션 바 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavView"
         android:layout_width="match_parent"

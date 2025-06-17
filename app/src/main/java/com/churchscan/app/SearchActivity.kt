@@ -3,7 +3,6 @@ package com.churchscan.app
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
@@ -21,6 +20,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var prefsHelper: SharedPreferencesHelper
     private lateinit var adapter: SearchHistoryAdapter
     private lateinit var editText: EditText
+    private lateinit var searchButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,18 +29,17 @@ class SearchActivity : AppCompatActivity() {
         // ✅ Firebase 초기화
         FirebaseApp.initializeApp(this)
 
-        // ✅ SharedPreferences 도우미 초기화
+        // ✅ SharedPreferences 초기화
         prefsHelper = SharedPreferencesHelper(this)
 
         // 🔍 뷰 연결
         editText = findViewById(R.id.etSearchText)
-        val searchButton = findViewById<Button>(R.id.btnSearchText)
+        searchButton = findViewById(R.id.btnSearchText)
         val btnClearAll = findViewById<Button>(R.id.btnClearAll)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSearchHistory)
 
-        // ✅ RecyclerView 설정 (어댑터 연결 + 클릭 이벤트 추가)
+        // ✅ 검색 기록 어댑터 연결
         val historyList = prefsHelper.getRecentSearches().toMutableList()
-
         adapter = SearchHistoryAdapter(
             historyList,
             onDelete = { itemToDelete ->
@@ -48,14 +47,13 @@ class SearchActivity : AppCompatActivity() {
                 adapter.removeItem(itemToDelete)
             },
             onItemClick = { selectedItem ->
-                editText.setText(selectedItem) // ✅ 텍스트 클릭 시 입력창에 자동 입력
+                editText.setText(selectedItem)
             }
         )
-
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        // ✅ MainActivity에서 전달된 검색어 처리
+        // ✅ 전달된 검색어 처리
         val passedQuery = intent.getStringExtra("search_query")
         if (!passedQuery.isNullOrEmpty()) {
             editText.setText(passedQuery)
@@ -67,7 +65,7 @@ class SearchActivity : AppCompatActivity() {
             searchHeresyByChurchName(passedQuery)
         }
 
-        // 🔍 검색 버튼 클릭
+        // 🔍 검색 버튼 클릭 처리
         searchButton.setOnClickListener {
             val keyword = editText.text.toString().trim()
             if (keyword.isNotEmpty()) {
@@ -80,31 +78,23 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        // 🔍 키보드 엔터로 검색
+        // ✅ 엔터키 → 검색 버튼 클릭으로 연결
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val keyword = editText.text.toString().trim()
-                if (keyword.isNotEmpty()) {
-                    prefsHelper.saveRecentSearch(keyword)
-                    adapter.removeItem(keyword)
-                    adapter.notifyDataSetChanged()
-                    searchHeresyByChurchName(keyword)
-                } else {
-                    showAlert("입력 오류", "교회 이름을 입력해주세요.")
-                }
+                searchButton.performClick()
                 true
             } else {
                 false
             }
         }
 
-        // ❌ 전체 삭제 버튼 클릭
+        // ❌ 전체 삭제 버튼
         btnClearAll.setOnClickListener {
             prefsHelper.clearAllSearches()
             adapter.clearAll()
         }
 
-        // 🔻 하단 네비게이션 바
+        // 🔻 하단 네비게이션
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
         bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -125,7 +115,7 @@ class SearchActivity : AppCompatActivity() {
         bottomNavView.selectedItemId = R.id.menu_search
     }
 
-    // 🔍 Firestore에서 이단 여부 확인
+    // 🔍 Firestore에서 이단 여부 조회
     private fun searchHeresyByChurchName(keyword: String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("jesus114_decisions")
@@ -141,7 +131,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
-                editText.setText("") // ✅ 결과 후 입력창 초기화
+                editText.setText("")  // ✅ 검색 후 입력창 초기화
 
                 if (found) {
                     showAlert("⚠️ 이단 주의", "$keyword 관련 이단 정보가 존재합니다.")
@@ -150,12 +140,11 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                editText.setText("") // 실패 시에도 초기화
+                editText.setText("")  // 실패 시에도 초기화
                 showAlert("❌ 오류", "Firestore 조회 중 오류 발생: ${it.message}")
             }
     }
 
-    // 📢 AlertDialog 표시
     private fun showAlert(title: String, message: String) {
         AlertDialog.Builder(this)
             .setTitle(title)

@@ -2,11 +2,8 @@ package com.churchscan.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.inputmethod.EditorInfo
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.churchscan.app.util.SharedPreferencesHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         prefsHelper = SharedPreferencesHelper(this)
 
+        // 🔍 검색 버튼 클릭
         btnMainSearch.setOnClickListener {
             val query = etMainSearch.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -48,6 +46,16 @@ class MainActivity : AppCompatActivity() {
                 navigateToSearch(query)
             } else {
                 Toast.makeText(this, "검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 🔍 엔터 키 처리
+        etMainSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                btnMainSearch.performClick() // 버튼 클릭 효과
+                true
+            } else {
+                false
             }
         }
 

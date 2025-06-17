@@ -31,7 +31,7 @@
                 android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ChurchScan에 오신 것을 환영합니다"
+                android:text="ChurchScan에 오시는 것을 환영합니다"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
@@ -52,7 +52,9 @@
                     android:hint="교회명을 입력하세요"
                     android:background="@drawable/edittext_bg"
                     android:padding="12dp"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text" />
 
                 <Button
                     android:id="@+id/btnMainSearch"
@@ -106,14 +108,14 @@
                 android:id="@+id/tvWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="⚠️ 이단 여부 정보는 한국기독교이단상담소 기준을 참고합니다 ⚠️"
+                android:text="⚠️ 이단 유무 정보는 한국기독교이단상담소 협회기준을 참고합니다 ⚠️"
                 android:textColor="#B00020"
                 android:textSize="20sp"
                 android:layout_marginTop="24dp"/>
         </LinearLayout>
     </ScrollView>
 
-    <!-- 하단 네비게이션 바 -->
+    <!-- 하단 네비가이션 바 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavView"
         android:layout_width="match_parent"

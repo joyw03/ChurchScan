@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="회원가입"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/purple_500"
+            android:backgroundTint="@color/verde_2"
             android:padding="12dp" />
     </LinearLayout>
 </ScrollView>

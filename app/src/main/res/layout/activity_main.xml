@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:text="검색"
                     android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/purple_500"
+                    android:backgroundTint="@color/verde_1"
                     android:textColor="@android:color/white" />
             </LinearLayout>
 
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="사진 업로드로 검색하기"
-                android:backgroundTint="@color/purple_700"
+                android:backgroundTint="@color/verde_2"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="20dp" />
 
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="최근 검색한 교회"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="10dp" />
 
             <LinearLayout
                 android:id="@+id/recentSearchList"

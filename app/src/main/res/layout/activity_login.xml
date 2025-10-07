@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="로그인"
-            android:backgroundTint="@color/purple_500"
+            android:backgroundTint="@color/verde_2"
             android:textColor="@android:color/white"
             android:layout_marginBottom="12dp" />
 
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="계정이 없으신가요? 회원가입"
-            android:textColor="#6200EE"
+            android:textColor="@color/verde_1"
             android:textSize="14sp"
             android:layout_marginTop="16dp" />
     </LinearLayout>

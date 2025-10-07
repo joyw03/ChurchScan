@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 배경색 -->
     <item android:drawable="@android:color/white" />
 
-    <!-- ChurchScan 로고 (중앙) -->
     <item>
         <bitmap
             android:gravity="center"

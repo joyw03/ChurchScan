@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.churchscan.app">
 
+    <!-- 🔑 Firestore 등 네트워크 사용을 위한 권한 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChurchScan">
 
-        <!-- ✅ 앱 시작: GIF 스플래시 화면 -->
+        <!-- 앱 시작: GIF 스플래시 화면 -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">

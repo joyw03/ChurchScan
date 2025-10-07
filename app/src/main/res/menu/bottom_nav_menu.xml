@@ -12,3 +12,4 @@
         android:icon="@drawable/ic_profile"
         android:title="내 정보" />
 </menu>
+

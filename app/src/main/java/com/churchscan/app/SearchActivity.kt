@@ -139,6 +139,7 @@ class SearchActivity : AppCompatActivity() {
     private fun normalizeForSearch(input: String): String =
         input.trim().lowercase().replace("\\s+".toRegex(), "")
 
+
     /** 🔎 교회 검색 */
     private fun doSearch(rawKeyword: String) {
         val q = normalizeForSearch(rawKeyword)

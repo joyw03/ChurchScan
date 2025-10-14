@@ -15,9 +15,9 @@ import com.churchscan.app.adapter.SearchHistoryAdapter
 import com.churchscan.app.util.SharedPreferencesHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.DocumentSnapshot
 
 class SearchActivity : AppCompatActivity() {
 
@@ -28,7 +28,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchButton: Button
     private lateinit var rvHistory: RecyclerView
 
-    // ✅ 추가: 검색 결과 표시용
+    // 결과 리스트
     private lateinit var rvResults: RecyclerView
     private lateinit var resultsAdapter: ChurchResultAdapter
     private var progressBar: ProgressBar? = null
@@ -38,24 +38,23 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        // ✅ Firebase 초기화
+        // Firebase
         FirebaseApp.initializeApp(this)
 
-        // ✅ SharedPreferences 초기화
+        // Prefs
         prefsHelper = SharedPreferencesHelper(this)
 
-        // 🔍 뷰 연결
+        // 뷰 바인딩
         editText = findViewById(R.id.etSearchText)
         searchButton = findViewById(R.id.btnSearchText)
         val btnClearAll = findViewById<Button>(R.id.btnClearAll)
         rvHistory = findViewById(R.id.recyclerViewSearchHistory)
 
-        // ✅ 추가된 뷰
         rvResults = findViewById(R.id.rvResults)
         progressBar = findViewById(R.id.progressSearch)
         tvResultsTitle = findViewById(R.id.tvResultsTitle)
 
-        // ✅ 검색 기록 어댑터 연결
+        // 최근 검색 어댑터
         val historyList = prefsHelper.getRecentSearches().toMutableList()
         historyAdapter = SearchHistoryAdapter(
             historyList,
@@ -70,24 +69,22 @@ class SearchActivity : AppCompatActivity() {
         rvHistory.layoutManager = LinearLayoutManager(this)
         rvHistory.adapter = historyAdapter
 
-        // ✅ 결과 리스트 어댑터 연결
+        // 결과 리스트 어댑터
         resultsAdapter = ChurchResultAdapter()
         rvResults.layoutManager = LinearLayoutManager(this)
         rvResults.adapter = resultsAdapter
 
-        // ✅ 전달된 검색어 처리
+        // 인텐트로 넘어온 검색어 처리
         val passedQuery = intent.getStringExtra("search_query")
         if (!passedQuery.isNullOrEmpty()) {
             editText.setText(passedQuery)
             prefsHelper.saveRecentSearch(passedQuery)
-            if (historyList.contains(passedQuery)) {
-                historyAdapter.removeItem(passedQuery)
-            }
+            if (historyList.contains(passedQuery)) historyAdapter.removeItem(passedQuery)
             historyAdapter.notifyDataSetChanged()
             doSearch(passedQuery)
         }
 
-        // 🔍 검색 버튼 클릭
+        // 검색 버튼
         searchButton.setOnClickListener {
             val keyword = editText.text.toString().trim()
             if (keyword.isNotEmpty()) {
@@ -100,7 +97,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ 엔터키 → 검색 버튼
+        // 엔터 -> 검색
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchButton.performClick()
@@ -108,26 +105,24 @@ class SearchActivity : AppCompatActivity() {
             } else false
         }
 
-        // ❌ 전체 삭제 버튼
+        // 최근검색 전체 삭제
         btnClearAll.setOnClickListener {
             prefsHelper.clearAllSearches()
             historyAdapter.clearAll()
         }
 
-        // 🔻 하단 네비게이션
+        // 하단 네비
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
         bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> {
                     startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                    true
+                    finish(); true
                 }
                 R.id.menu_search -> true
                 R.id.menu_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                    true
+                    finish(); true
                 }
                 else -> false
             }
@@ -135,12 +130,11 @@ class SearchActivity : AppCompatActivity() {
         bottomNavView.selectedItemId = R.id.menu_search
     }
 
-    /** 🔤 띄어쓰기/대소문자 무시 */
+    /** 띄어쓰기/대소문자 무시 정규화 */
     private fun normalizeForSearch(input: String): String =
         input.trim().lowercase().replace("\\s+".toRegex(), "")
 
-
-    /** 🔎 교회 검색 */
+    /** 교회 검색(name_norm prefix) + 이단 여부 체크 */
     private fun doSearch(rawKeyword: String) {
         val q = normalizeForSearch(rawKeyword)
         if (q.isEmpty()) {
@@ -152,6 +146,8 @@ class SearchActivity : AppCompatActivity() {
         tvResultsTitle?.text = "검색 결과"
 
         val db = FirebaseFirestore.getInstance()
+
+        // 교회 리스트 검색
         db.collection("churches")
             .orderBy("name_norm", Query.Direction.ASCENDING)
             .startAt(q)
@@ -165,36 +161,43 @@ class SearchActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressBar?.visibility = android.view.View.GONE
-                if (e.message?.contains("FAILED_PRECONDITION") == true) {
-                    showAlert("인덱스 필요",
-                        "Firestore에서 name_norm 인덱스를 생성해 주세요.\n에러 메시지의 'Create index' 링크를 눌러 생성하면 됩니다.")
-                } else {
-                    showAlert("오류", "검색 중 오류가 발생했습니다: ${e.message}")
-                }
+                showAlert("오류", "검색 중 오류가 발생했습니다: ${e.message}")
             }
 
-        // ✅ 이단 여부 체크
+        // 이단 여부 체크 (title_norm + reason 안전 처리)
         searchHeresyByChurchName(rawKeyword)
 
-        // ✅ 검색 후 입력창 초기화
+        // 검색 후 입력창 초기화
         editText.setText("")
     }
 
-    // 🔍 이단 여부 조회
+    /** jesus114_decisions 이단 여부 조회 (띄어쓰기·대소문자 무시 + reason 타입 안전) */
     private fun searchHeresyByChurchName(keyword: String) {
         val db = FirebaseFirestore.getInstance()
+        val normalized = normalizeForSearch(keyword)
+
         db.collection("jesus114_decisions")
             .get()
             .addOnSuccessListener { documents ->
                 var found = false
                 for (doc in documents) {
-                    val title = doc.get("title")?.toString() ?: ""
-                    val reason = doc.get("reason")?.toString() ?: ""
-                    if (title.contains(keyword) || reason.contains(keyword)) {
+                    val titleNorm = doc.getString("title_norm") ?: ""
+
+                    // reason: String / List / Map 어떤 타입이든 문자열로 병합
+                    val reasonText = when (val r = doc.get("reason")) {
+                        is String -> r
+                        is List<*> -> r.joinToString(" ") { it?.toString().orEmpty() }
+                        is Map<*, *> -> r.values.joinToString(" ") { it?.toString().orEmpty() }
+                        else -> ""
+                    }
+
+                    if (titleNorm.contains(normalized) ||
+                        reasonText.lowercase().contains(keyword.lowercase())) {
                         found = true
                         break
                     }
                 }
+
                 if (found) {
                     showAlert("⚠️ 이단 주의", "$keyword 관련 이단 정보가 존재합니다.")
                 } else {

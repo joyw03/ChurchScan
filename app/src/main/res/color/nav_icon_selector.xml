@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- res/color/nav_item_color.xml -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/verde_1" android:state_checked="true"/>
-    <item android:color="#808080" android:state_checked="false"/>
+    <!-- 선택된 탭 -->
+    <item android:state_checked="true" android:color="@color/white"/>
+    <!-- 비선택 탭 -->
+    <item android:color="@color/gray_light"/>
 </selector>

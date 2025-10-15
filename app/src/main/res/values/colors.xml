@@ -7,4 +7,5 @@
         <color name="black">#2D3434</color>
         <color name="gray_light">#CFD3D3</color>
         <color name="red">#D32F2F</color>
+        <color name="nav_item_color">#D9EFF0</color>
     </resources>

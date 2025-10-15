@@ -34,11 +34,11 @@ class MainActivity : AppCompatActivity() {
         btnMainSearch = findViewById(R.id.btnMainSearch)
         btnUploadImage = findViewById(R.id.btnUploadImage)
         recentSearchLayout = findViewById(R.id.recentSearchList)
-        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
+        val bottom = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         prefsHelper = SharedPreferencesHelper(this)
 
-        // 🔍 검색 버튼 클릭
+        // 검색 버튼
         btnMainSearch.setOnClickListener {
             val query = etMainSearch.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -49,38 +49,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 🔍 엔터 키 처리
+        // 엔터 처리
         etMainSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                btnMainSearch.performClick() // 버튼 클릭 효과
+                btnMainSearch.performClick()
                 true
-            } else {
-                false
-            }
+            } else false
         }
 
         btnUploadImage.setOnClickListener {
             Toast.makeText(this, "이미지 업로드 기능은 추후 지원됩니다", Toast.LENGTH_SHORT).show()
         }
 
-        bottomNavView.setOnItemSelectedListener { item ->
+        // 하단 네비
+        bottom.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.menu_home -> true
-                R.id.menu_search -> {
+                R.id.nav_home -> true // 현재 화면
+                R.id.nav_search -> {
                     startActivity(Intent(this, SearchActivity::class.java))
-                    finish()
                     true
                 }
-                R.id.menu_profile -> {
+                R.id.nav_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
                     true
                 }
                 else -> false
             }
         }
+        bottom.setOnItemReselectedListener { /* no-op */ }
+        bottom.selectedItemId = R.id.nav_home
 
-        bottomNavView.selectedItemId = R.id.menu_home
         updateRecentSearches()
     }
 
@@ -88,15 +86,13 @@ class MainActivity : AppCompatActivity() {
         recentSearchLayout.removeAllViews()
         val recentSearches = prefsHelper.getRecentSearches()
         for (search in recentSearches) {
-            val textView = TextView(this).apply {
+            val tv = TextView(this).apply {
                 text = "- $search"
                 textSize = 16f
                 setPadding(8, 8, 8, 8)
-                setOnClickListener {
-                    navigateToSearch(search)
-                }
+                setOnClickListener { navigateToSearch(search) }
             }
-            recentSearchLayout.addView(textView)
+            recentSearchLayout.addView(tv)
         }
     }
 

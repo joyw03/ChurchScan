@@ -5,122 +5,123 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <!-- 메인 고정 콘텐츠 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:padding="24dp"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="72dp">
 
+        <!-- ChurchScan 로고 -->
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/church_logo"
+            android:contentDescription="ChurchScan 로고"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 인사말 -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ChurchScan에 오시는 것을 환영합니다"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 검색창 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
 
-            <!-- ChurchScan 로고 -->
-            <ImageView
-                android:id="@+id/ivLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/church_logo"
-                android:contentDescription="ChurchScan 로고"
-                android:layout_marginBottom="24dp" />
-
-            <!-- 인사말 -->
-            <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/etMainSearch"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="ChurchScan에 오시는 것을 환영합니다"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginBottom="16dp" />
+                android:hint="교회명을 입력하세요"
+                android:background="@drawable/edittext_bg"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
 
-            <!-- 검색창 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <EditText
-                    android:id="@+id/etMainSearch"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:hint="교회명을 입력하세요"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="12dp"
-                    android:textSize="16sp"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text" />
-
-                <Button
-                    android:id="@+id/btnMainSearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="검색"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/verde_1"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <!-- 사진 업로드 버튼 -->
             <Button
-                android:id="@+id/btnUploadImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사진 업로드로 검색하기"
-                android:backgroundTint="@color/verde_2"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="20dp" />
-
-            <!-- 최근 검색 -->
-            <TextView
-                android:id="@+id/tvRecent"
+                android:id="@+id/btnMainSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="최근 검색한 교회"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
-
-            <LinearLayout
-                android:id="@+id/recentSearchList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="- 예수비전교회"
-                    android:textColor="#555555"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="- 온누리교회"
-                    android:textColor="#555555"/>
-            </LinearLayout>
-
-            <!-- 이단 주의 문구 -->
-            <TextView
-                android:id="@+id/tvWarning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="⚠️ 이단 유무 정보는 한국기독교이단상담소 협회기준을 참고합니다 ⚠️"
-                android:textColor="#B00020"
-                android:textSize="20sp"
-                android:layout_marginTop="24dp"/>
+                android:text="검색"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/verde_1"
+                android:textColor="@android:color/white" />
         </LinearLayout>
-    </ScrollView>
 
-    <!-- 하단 네비가이션 바 -->
+        <!-- 사진 업로드 버튼 -->
+        <Button
+            android:id="@+id/btnUploadImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="사진 업로드로 검색하기"
+            android:backgroundTint="@color/verde_2"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp" />
+
+        <!-- 최근 검색 -->
+        <TextView
+            android:id="@+id/tvRecent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="최근 검색한 교회"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:id="@+id/recentSearchList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- 예수비전교회"
+                android:textColor="#555555"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- 온누리교회"
+                android:textColor="#555555"/>
+        </LinearLayout>
+
+        <!-- 이단 주의 문구 -->
+        <TextView
+            android:id="@+id/tvWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ 이단 유무 정보는 한국기독교이단상담소 협회 기준을 참고합니다 ⚠️"
+            android:textColor="#B00020"
+            android:textSize="20sp"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+
+    <!-- 하단 네비게이션 바 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavView"
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@color/verde_1"
+        android:elevation="10dp"
+        app:itemIconSize="30dp"
         app:menu="@menu/bottom_nav_menu"
-        android:background="?android:attr/windowBackground" />
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

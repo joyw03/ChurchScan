@@ -111,23 +111,23 @@ class SearchActivity : AppCompatActivity() {
             historyAdapter.clearAll()
         }
 
-        // 하단 네비
-        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavView)
-        bottomNavView.setOnItemSelectedListener { item ->
+        // 하단 네비  ✅ 여기 수정: XML의 id와 메뉴 id에 맞춤
+        val bottom = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottom.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.menu_home -> {
+                R.id.nav_home -> {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish(); true
                 }
-                R.id.menu_search -> true
-                R.id.menu_profile -> {
+                R.id.nav_search -> true
+                R.id.nav_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
                     finish(); true
                 }
                 else -> false
             }
         }
-        bottomNavView.selectedItemId = R.id.menu_search
+        bottom.selectedItemId = R.id.nav_search
     }
 
     /** 띄어쓰기/대소문자 무시 정규화 */

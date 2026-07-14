@@ -111,7 +111,7 @@ class SearchActivity : AppCompatActivity() {
             historyAdapter.clearAll()
         }
 
-        // 하단 네비  ✅ 여기 수정: XML의 id와 메뉴 id에 맞춤
+        // 하단 네비
         val bottom = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottom.setOnItemSelectedListener { item ->
             when (item.itemId) {
